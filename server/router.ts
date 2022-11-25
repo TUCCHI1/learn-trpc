@@ -1,4 +1,5 @@
 import { initTRPC } from "@trpc/server";
+import { z } from "zod";
 
 const t = initTRPC.create();
 
@@ -32,6 +33,20 @@ const appRouter = t.router({
       const { input } = req;
 
       const user = userList.find((u) => u.id === input);
+      return user;
+    }),
+  userCreate: t.procedure
+    .input(z.object({ name: z.string() }))
+    .mutation((req) => {
+      const id = `${Math.random()}`;
+
+      const user: User = {
+        id,
+        name: req.input.name,
+      };
+
+      userList.push(user);
+
       return user;
     }),
 });
